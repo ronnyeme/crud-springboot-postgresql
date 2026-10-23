@@ -1,6 +1,12 @@
 package com.practica.crud.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "mes")
@@ -10,50 +16,45 @@ public class Mes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String codigo;
+    // MES.DBF: MES N(2,0)
+    @Column(name = "mes")
+    private Integer mes;
 
-    private String nombre;
+    // MES.DBF: NOMMES C(10)
+    @Column(name = "nommes", length = 10)
+    private String nommes;
 
-    private String descripcion;
+    // Compatibilidad temporal: no se guarda en la base de datos.
+    @Transient
+    private String descripcionAnterior;
 
-    public Mes() {
-    }
+    public Mes() { }
 
     public Mes(String codigo, String nombre, String descripcion) {
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
+        setCodigo(codigo);
+        setNombre(nombre);
+        setDescripcion(descripcion);
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Integer getMes() { return mes; }
+    public void setMes(Integer mes) { this.mes = mes; }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    public String getNommes() { return nommes; }
+    public void setNommes(String nommes) { this.nommes = nommes; }
 
+    // Alias temporales para el MesService y MesDTO actuales.
+    public String getCodigo() { return mes == null ? null : mes.toString(); }
     public void setCodigo(String codigo) {
-        this.codigo = codigo;
+        this.mes = codigo == null || codigo.isBlank()
+                ? null : Integer.valueOf(codigo.trim());
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nommes; }
+    public void setNombre(String nombre) { this.nommes = nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public String getDescripcion() { return descripcionAnterior; }
+    public void setDescripcion(String descripcion) { this.descripcionAnterior = descripcion; }
 }

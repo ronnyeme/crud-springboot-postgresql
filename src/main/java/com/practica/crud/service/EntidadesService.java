@@ -1,3 +1,4 @@
+
 package com.practica.crud.service;
 
 import com.practica.crud.dto.EntidadesDTO;
@@ -17,7 +18,7 @@ public class EntidadesService {
         this.entidadesRepository = entidadesRepository;
     }
 
-    // LISTAR TODOS
+    // GET - LISTAR TODAS LAS ENTIDADES
     public List<EntidadesDTO> listar() {
         return entidadesRepository.findAll()
                 .stream()
@@ -25,43 +26,39 @@ public class EntidadesService {
                 .toList();
     }
 
-    // BUSCAR POR ID
+    // GET - BUSCAR ENTIDAD POR ID
     public Optional<EntidadesDTO> buscarPorId(Long id) {
         return entidadesRepository.findById(id)
                 .map(this::convertirADTO);
     }
 
-    // CREAR
+    // POST - CREAR ENTIDAD
     public EntidadesDTO crear(EntidadesDTO dto) {
 
-        Entidades entidades = new Entidades();
+        Entidades entidad = new Entidades();
 
-        entidades.setCodigo(dto.getCodigo());
-        entidades.setNombre(dto.getNombre());
-        entidades.setDescripcion(dto.getDescripcion());
+        copiarDatos(dto, entidad);
 
-        Entidades guardado = entidadesRepository.save(entidades);
+        Entidades guardado = entidadesRepository.save(entidad);
 
         return convertirADTO(guardado);
     }
 
-    // ACTUALIZAR
+    // PUT - ACTUALIZAR ENTIDAD
     public Optional<EntidadesDTO> actualizar(Long id, EntidadesDTO dto) {
 
         return entidadesRepository.findById(id)
-                .map(entidades -> {
+                .map(entidad -> {
 
-                    entidades.setCodigo(dto.getCodigo());
-                    entidades.setNombre(dto.getNombre());
-                    entidades.setDescripcion(dto.getDescripcion());
+                    copiarDatos(dto, entidad);
 
-                    Entidades actualizado = entidadesRepository.save(entidades);
+                    Entidades actualizado = entidadesRepository.save(entidad);
 
                     return convertirADTO(actualizado);
                 });
     }
 
-    // ELIMINAR
+    // DELETE - ELIMINAR ENTIDAD
     public boolean eliminar(Long id) {
 
         if (!entidadesRepository.existsById(id)) {
@@ -73,14 +70,34 @@ public class EntidadesService {
         return true;
     }
 
-    // CONVERTIR ENTITY -> DTO
-    private EntidadesDTO convertirADTO(Entidades entidades) {
+    // COPIAR DATOS DEL DTO A LA ENTIDAD
+    private void copiarDatos(EntidadesDTO dto, Entidades entidad) {
+
+        entidad.setGestion(dto.getGestion());
+        entidad.setEntidad(dto.getEntidad());
+        entidad.setDescEnt(dto.getDescEnt());
+        entidad.setSiglaEnt(dto.getSiglaEnt());
+        entidad.setSectorEnt(dto.getSectorEnt());
+        entidad.setSubsecEnt(dto.getSubsecEnt());
+        entidad.setAreaEnt(dto.getAreaEnt());
+        entidad.setSubareaent(dto.getSubareaent());
+        entidad.setNivelInst(dto.getNivelInst());
+    }
+
+    // CONVERTIR ENTIDAD A DTO
+    private EntidadesDTO convertirADTO(Entidades entidad) {
 
         return new EntidadesDTO(
-                entidades.getId(),
-                entidades.getCodigo(),
-                entidades.getNombre(),
-                entidades.getDescripcion()
+                entidad.getId(),
+                entidad.getGestion(),
+                entidad.getEntidad(),
+                entidad.getDescEnt(),
+                entidad.getSiglaEnt(),
+                entidad.getSectorEnt(),
+                entidad.getSubsecEnt(),
+                entidad.getAreaEnt(),
+                entidad.getSubareaent(),
+                entidad.getNivelInst()
         );
     }
 }

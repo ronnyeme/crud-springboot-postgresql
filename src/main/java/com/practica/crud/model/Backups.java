@@ -1,59 +1,64 @@
 package com.practica.crud.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
+/** Tabla BACKUPS.DBF de vSIAF: historial de respaldos. */
 @Entity
 @Table(name = "backups")
 public class Backups {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    @Column(name = "dia")
+    private LocalDate dia;
 
-    private String ubicacion;
+    @Column(name = "hora", length = 8)
+    private String hora;
 
-    private String fecha;
+    @Column(name = "archivo", length = 12)
+    private String archivo;
 
-    public Backups() {
-    }
+    @Column(name = "observ", columnDefinition = "TEXT")
+    private String observ;
 
-    public Backups(String nombre, String ubicacion, String fecha) {
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.fecha = fecha;
-    }
+    @Column(name = "usuar", length = 8)
+    private String usuar;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "feult")
+    private LocalDate feult;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Backups() {}
 
-    public String getNombre() {
-        return nombre;
-    }
+    // Métodos de compatibilidad para el servicio anterior.
+    // No son columnas persistentes; deben sustituirse al actualizar el DTO/servicio.
+    @Transient
+    public String getNombre() { return archivo; }
+    public void setNombre(String nombre) { this.archivo = nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    @Transient
+    public String getUbicacion() { return observ; }
+    public void setUbicacion(String ubicacion) { this.observ = ubicacion; }
 
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
+    @Transient
+    public String getFecha() { return dia == null ? null : dia.toString(); }
     public void setFecha(String fecha) {
-        this.fecha = fecha;
+        this.dia = (fecha == null || fecha.isBlank()) ? null : LocalDate.parse(fecha);
     }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public LocalDate getDia() { return dia; }
+    public void setDia(LocalDate dia) { this.dia = dia; }
+    public String getHora() { return hora; }
+    public void setHora(String hora) { this.hora = hora; }
+    public String getArchivo() { return archivo; }
+    public void setArchivo(String archivo) { this.archivo = archivo; }
+    public String getObserv() { return observ; }
+    public void setObserv(String observ) { this.observ = observ; }
+    public String getUsuar() { return usuar; }
+    public void setUsuar(String usuar) { this.usuar = usuar; }
+    public LocalDate getFeult() { return feult; }
+    public void setFeult(LocalDate feult) { this.feult = feult; }
 }

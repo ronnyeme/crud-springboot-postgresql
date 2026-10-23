@@ -1,6 +1,12 @@
 package com.practica.crud.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "data")
@@ -10,10 +16,19 @@ public class Data {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Campo original de DATA.DBF (Visual FoxPro: Character(50)).
+    @Column(name = "data", length = 50)
+    private String data;
+
+    // Compatibilidad temporal con DataService y DataDTO existentes.
+    // Estos campos NO se guardan en la base de datos.
+    @Transient
     private String codigo;
 
+    @Transient
     private String valor;
 
+    @Transient
     private String descripcion;
 
     public Data() {
@@ -31,6 +46,14 @@ public class Data {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public String getCodigo() {
